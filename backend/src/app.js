@@ -1,16 +1,13 @@
-if (process.env.NODE_ENV != "production") {
-  require("dotenv").config();
-}
+import dotenv from "dotenv";
+dotenv.config(); 
 
-import express, { urlencoded } from "express";
+import express from "express";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import cors from "cors";
 import { connectToSocket } from "./controllers/socketManager.js";
 import userRoutes from "./routes/user.routes.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 const app = express();
 const server = createServer(app);
