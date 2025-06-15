@@ -1,4 +1,3 @@
-// Authentication.jsx
 import React, { useContext } from "react";
 import "./authentication.css";
 import { useNavigate } from "react-router-dom";
@@ -12,13 +11,16 @@ export default function Authentication() {
   const [message, setMessage] = React.useState("");
   const [formState, setFormState] = React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false); // NEW
 
   const { handleRegister, handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const handleAuth = async () => {
+    setLoading(true); // Start loading
     try {
       if (formState === 0) {
-        let result = await handleLogin(username, password);
+        await handleLogin(username, password);
       }
       if (formState === 1) {
         let result = await handleRegister(name, username, password);
@@ -32,8 +34,10 @@ export default function Authentication() {
       }
     } catch (err) {
       console.log(err);
-      let message = err.response.data.message;
+      let message = err?.response?.data?.message || "Something went wrong.";
       setError(message);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -182,6 +186,13 @@ export default function Authentication() {
         <div className="snackbar">
           <span className="snackbar-icon">✅</span>
           <p>{message}</p>
+        </div>
+      )}
+
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loader"></div>
+          <p className="loading-text">Please wait a few seconds...</p>
         </div>
       )}
     </div>
